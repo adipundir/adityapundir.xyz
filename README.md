@@ -1,5 +1,3 @@
-# adityapundir.xyz
+Welcome to my personal portfolio website.
 
-Hi there! Welcome to my personal portfolio website.
-
-Here, you’ll find everything about my professional journey : my skills, projects, and experiences, all in one place. 
+Here, you’ll find everything about my professional journey—my skills, projects, and experiences all in one place. 
