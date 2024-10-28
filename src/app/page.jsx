@@ -113,6 +113,18 @@ export default function Home() {
         <div className="main-content">
           <div className="copy">
             <div className="line">
+              <p>Blockchain dev from India ✨</p>
+            </div>
+            <div className="line">
+              <p>writing Solidity sc like it's magic 🪄</p>
+            </div>
+            <div className="line">
+              <p>and building slick frontends to match!</p>
+            </div>
+          </div>
+
+          {/* <div className="copy">
+            <div className="line">
               <p>React Native developer from India ✨</p>
             </div>
             <div className="line">
@@ -121,7 +133,7 @@ export default function Home() {
             <div className="line">
               <p>and pay attention to detail</p>
             </div>
-          </div>
+          </div> */}
          
 
         </div>
