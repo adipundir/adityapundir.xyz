@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ReactLenis } from "lenis/react";
@@ -85,7 +86,7 @@ export default function Home() {
       rows.push(
         <div className="row" key={i}>
           <div className="card card-left">
-            <img
+            <Image
               src={`/img-${2 * i - 1}.gif`}
               alt=""
               width={100}
@@ -93,7 +94,7 @@ export default function Home() {
             />
           </div>
           <div className="card card-right">
-            <img src={`/img-${2 * i}.gif`} alt="" width={100} height={100} />
+            <Image src={`/img-${2 * i}.gif`} alt="" width={100} height={100} />
           </div>
         </div>
       );
@@ -116,7 +117,7 @@ export default function Home() {
               <p>Blockchain dev from India ✨</p>
             </div>
             <div className="line">
-              <p>writing Solidity sc like it's magic 🪄</p>
+              <p>writing Solidity sc like it&apos;s magic 🪄</p>
             </div>
             <div className="line">
               <p>and building slick frontends to match!</p>
