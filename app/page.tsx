@@ -7,7 +7,6 @@ import { Achievements } from "@/components/sections/achievements"
 import { Education } from "@/components/sections/education"
 import { Projects } from "@/components/sections/projects"
 import { WorkHistory } from "@/components/sections/work-history"
-import { CurrentHighlights } from "@/components/sections/current-highlights"
 import { CurrentWork } from "@/components/sections/current-work"
 import { SocialLinks } from "@/components/sections/social-links"
 
@@ -21,7 +20,6 @@ export default function PortfolioPage() {
     education: <Education />,
     projects: <Projects />,
     workHistory: <WorkHistory />,
-    currentHighlights: <CurrentHighlights />,
     currentWork: <CurrentWork />,
     socialLinks: <SocialLinks />,
   }
@@ -30,10 +28,9 @@ export default function PortfolioPage() {
   const navigationLabels = {
     chat: "Chat with Me",
     achievements: "Achievements",
-    education: "Educational History",
     projects: "Projects",
+    education: "Educational History",
     workHistory: "Work History",
-    currentHighlights: "Current Highlights",
     currentWork: "What I'm Working On",
     socialLinks: "Social Links",
   }

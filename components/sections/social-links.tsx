@@ -7,43 +7,43 @@ export function SocialLinks() {
   const socialLinks = [
     {
       name: "GitHub",
-      username: "@johnportfolio",
-      url: "https://github.com/johnportfolio",
+      username: "@adipundir",
+      url: "https://github.com/adipundir",
       icon: Github,
       color: "bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-800 dark:hover:bg-zinc-700",
     },
     {
       name: "LinkedIn",
-      username: "John Portfolio",
-      url: "https://linkedin.com/in/johnportfolio",
+      username: "Aditya Pundir",
+      url: "https://linkedin.com/in/adipundir",
       icon: Linkedin,
       color: "bg-[#0077B5] hover:bg-[#006699]",
     },
     {
       name: "Twitter",
-      username: "@johnportfolio",
-      url: "https://twitter.com/johnportfolio",
+      username: "@adipundir",
+      url: "https://twitter.com/adipundir",
       icon: Twitter,
       color: "bg-[#1DA1F2] hover:bg-[#0c85d0]",
     },
-    {
-      name: "Personal Website",
-      username: "johnportfolio.dev",
-      url: "https://johnportfolio.dev",
-      icon: Globe,
-      color: "bg-emerald-600 hover:bg-emerald-700",
-    },
+    // {
+    //   name: "Personal Website",
+    //   username: "adityapundir.xyz",
+    //   url: "https://adityapundir.xyz",
+    //   icon: Globe,
+    //   color: "bg-emerald-600 hover:bg-emerald-700",
+    // },
     {
       name: "Email",
-      username: "hello@johnportfolio.dev",
-      url: "mailto:hello@johnportfolio.dev",
+      username: "pundir.aditya@outlook.com",
+      url: "mailto:pundir.aditya@outlook.com",
       icon: Mail,
       color: "bg-amber-600 hover:bg-amber-700",
     },
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8">
       <SectionHeader icon={Share2} title="Social Links" />
 
       <Card>

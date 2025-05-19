@@ -2,54 +2,42 @@ import { Hammer } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { SectionHeader } from "@/components/ui/section-header"
-import { MobileOptimizedCard } from "@/components/ui/mobile-optimized-card"
+import Image from "next/image"
 
 export function CurrentWork() {
-  const currentProjects = [
-    {
-      title: "Machine Learning Course",
-      description: "Taking Stanford's online course on advanced machine learning techniques",
-      progress: 65,
-      eta: "Completion expected by August 2023",
-    },
-    {
-      title: "Open Source Library",
-      description: "Building a React component library for data visualization",
-      progress: 40,
-      eta: "Completion expected by October 2023",
-    },
-    {
-      title: "Personal Blog",
-      description: "Writing technical articles about web development and AI",
-      progress: 80,
-      eta: "Ongoing project",
-    },
-  ]
+  const currentProject = {
+    title: "Personal Portfolio Website",
+    image: "/working.png",
+    progress: 70
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 pb-8">
       <SectionHeader icon={Hammer} title="What I'm Working On" />
 
-      <div className="space-y-4">
-        {currentProjects.map((project, index) => (
-          <MobileOptimizedCard
-            key={index}
-            title={project.title}
-          >
-            <div className="space-y-4">
-              <p>{project.description}</p>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm font-medium">Progress</span>
-                  <span className="text-sm font-medium">{project.progress}%</span>
-                </div>
-                <Progress value={project.progress} />
-              </div>
-              <p className="text-sm text-muted-foreground">{project.eta}</p>
+      <Card className="overflow-hidden max-w-3xl mx-auto pt-0">
+        <div className="relative w-full h-[250px] md:h-[300px]">
+          <Image 
+            src={currentProject.image}
+            alt={currentProject.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+        
+        <CardContent className="pt-6 px-6">
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="font-medium">Progress</span>
+              <span className="font-medium">{currentProject.progress}%</span>
             </div>
-          </MobileOptimizedCard>
-        ))}
-      </div>
+            <Progress 
+              value={currentProject.progress} 
+              className="h-3"
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

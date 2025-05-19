@@ -8,6 +8,27 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
+import { chatWithMe } from "@/app/actions/chat"
+import { sanitizeUserMessage } from "@/lib/chat-security"
+import { parseLinks } from "@/lib/parse-links"
+
+// Timestamp component that handles client-side formatting
+const MessageTimestamp = ({ timestamp }: { timestamp: Date }) => {
+  const [formattedTime, setFormattedTime] = useState<string>("");
+  
+  useEffect(() => {
+    // Format time on client-side only to avoid hydration mismatch
+    setFormattedTime(
+      timestamp.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true
+      })
+    );
+  }, [timestamp]);
+  
+  return <span>{formattedTime}</span>;
+};
 
 type Message = {
   id: string
@@ -20,7 +41,7 @@ const initialMessages: Message[] = [
   {
     id: "1",
     content:
-      "Hi there! I'm John's AI assistant. Feel free to ask me anything about John's experience, projects, or background!",
+      "Hi there! I'm Aditya. Feel free to ask me anything about my experience, projects, or background!",
     role: "assistant",
     timestamp: new Date(),
   },
@@ -31,21 +52,29 @@ export function ChatInterface() {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    // Re-focus the input box after messages are updated
+    if (!isLoading) {
+      inputRef.current?.focus()
+    }
+  }, [messages, isLoading])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!input.trim()) return
 
-    // Add user message
+    // Pre-sanitize the input on the client side
+    const sanitizedInput = sanitizeUserMessage(input);
+
+    // Add user message with sanitized input
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: input,
+      content: sanitizedInput,
       role: "user",
       timestamp: new Date(),
     }
@@ -54,36 +83,44 @@ export function ChatInterface() {
     setInput("")
     setIsLoading(true)
 
-    // Simulate AI response (in a real app, this would call an API)
-    setTimeout(() => {
+    try {
+      // Prepare messages for the server action
+      const messagesForAPI = messages.concat(userMessage).map(msg => ({
+        content: msg.content,
+        role: msg.role
+      }));
+
+      // Call the server action
+      const response = await chatWithMe(messagesForAPI);
+
+      // Add AI response to the chat
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: getSimulatedResponse(input),
+        content: String(response.content),
         role: "assistant",
         timestamp: new Date(),
       }
 
       setMessages((prev) => [...prev, assistantMessage])
+    } catch (error) {
+      console.error("Error sending message:", error);
+      
+      // Add error message
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I'm having trouble responding right now. Please try again later.",
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
       setIsLoading(false)
-    }, 1000)
-  }
-
-  // Simple response simulation
-  const getSimulatedResponse = (query: string): string => {
-    const responses = [
-      "John has over 5 years of experience in full-stack development.",
-      "John graduated from Tech University with a degree in Computer Science.",
-      "John's most recent project was building a real-time analytics dashboard.",
-      "John is currently learning about AI and machine learning.",
-      "You can find John's work on GitHub and LinkedIn. Check the Social Links section for more details.",
-      "John specializes in React, Node.js, and TypeScript development.",
-    ]
-
-    return responses[Math.floor(Math.random() * responses.length)]
+    }
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col ">
       <div className="mb-4 hidden md:block">
         <h1 className="text-2xl font-bold">Chat with Me</h1>
         <p className="text-muted-foreground">Ask me anything about my experience, projects, or background</p>
@@ -98,8 +135,8 @@ export function ChatInterface() {
             >
               {message.role === "assistant" && (
                 <Avatar className="mt-0.5 h-8 w-8">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32" alt="AI" />
-                  <AvatarFallback>AI</AvatarFallback>
+                  <AvatarImage src="/aditya.jpg" alt="AI" />
+                  <AvatarFallback>AP</AvatarFallback>
                 </Avatar>
               )}
 
@@ -109,15 +146,15 @@ export function ChatInterface() {
                   message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted",
                 )}
               >
-                <p>{message.content}</p>
+                <p>{message.role === "assistant" ? parseLinks(message.content) : message.content}</p>
                 <div className="mt-1 text-xs opacity-70">
-                  {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  <MessageTimestamp timestamp={message.timestamp} />
                 </div>
               </div>
 
               {message.role === "user" && (
                 <Avatar className="mt-0.5 h-8 w-8">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
+                  <AvatarImage src="/user.png" alt="User" />
                   <AvatarFallback>ME</AvatarFallback>
                 </Avatar>
               )}
@@ -127,8 +164,8 @@ export function ChatInterface() {
           {isLoading && (
             <div className="flex items-start gap-3">
               <Avatar className="mt-0.5 h-8 w-8">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="AI" />
-                <AvatarFallback>AI</AvatarFallback>
+                <AvatarImage src="/aditya.jpg" alt="AI" />
+                <AvatarFallback>AP</AvatarFallback>
               </Avatar>
               <div className="rounded-lg bg-muted px-4 py-2">
                 <div className="flex space-x-2">
@@ -150,8 +187,9 @@ export function ChatInterface() {
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="mt-4 flex gap-2">
+      <form onSubmit={handleSendMessage} className="mt-8 flex gap-2">
         <Input
+          ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."

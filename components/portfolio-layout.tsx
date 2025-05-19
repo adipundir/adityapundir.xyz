@@ -18,10 +18,9 @@ interface PortfolioLayoutProps {
 const navigationItems = [
   { id: "chat", label: "Chat with Me", icon: MessageSquare },
   { id: "achievements", label: "Achievements", icon: Trophy },
-  { id: "education", label: "Educational History", icon: GraduationCap },
   { id: "projects", label: "Projects", icon: FolderKanban },
   { id: "workHistory", label: "Work History", icon: Briefcase },
-  { id: "currentHighlights", label: "Current Highlights", icon: Star },
+  { id: "education", label: "Educational History", icon: GraduationCap },
   { id: "currentWork", label: "What I'm Working On", icon: Hammer },
   { id: "socialLinks", label: "Social Links", icon: Share2 },
 ]
@@ -102,11 +101,8 @@ export function PortfolioLayout({ children, activeSection, onSectionChange, head
 
       {/* Footer */}
       <div className="border-t border-sidebar-border p-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-start">
           <ThemeToggle />
-          <Button variant="outline" size="sm">
-            Contact
-          </Button>
         </div>
       </div>
     </>
@@ -144,7 +140,7 @@ export function PortfolioLayout({ children, activeSection, onSectionChange, head
 
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden overflow-y-auto pt-20 md:pt-0 h-full w-full">
-        <div className="h-full w-full p-4 sm:p-6 md:p-8">
+        <div className="h-full w-full p-4 pb-16 sm:p-6 sm:pb-16 md:p-8 md:pb-24">
           {children}
         </div>
       </main>
