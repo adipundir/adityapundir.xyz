@@ -2,6 +2,7 @@ import { Share2, Github, Linkedin, Twitter, Globe, Mail } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { SectionHeader } from "@/components/ui/section-header"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 
 export function SocialLinks() {
   const socialLinks = [
@@ -43,35 +44,37 @@ export function SocialLinks() {
   ]
 
   return (
-    <div className="space-y-6 pb-8">
-      <SectionHeader icon={Share2} title="Social Links" />
+    <SectionWrapper>
+      <div className="space-y-8">
+        <SectionHeader icon={Share2} title="Social Links" />
 
-      <Card>
-        <CardHeader className="hidden md:block">
-          <CardTitle>Connect with me</CardTitle>
-          <CardDescription>Find me on these platforms and get in touch</CardDescription>
-        </CardHeader>
-        <CardContent className="md:pt-6">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {socialLinks.map((link) => (
-              <Button
-                key={link.name}
-                variant="default"
-                className={`h-auto justify-start gap-3 p-4 text-white ${link.color}`}
-                asChild
-              >
-                <a href={link.url} target="_blank" rel="noopener noreferrer">
-                  <link.icon className="h-5 w-5" />
-                  <div className="flex flex-col items-start">
-                    <span className="font-medium">{link.name}</span>
-                    <span className="text-xs opacity-90">{link.username}</span>
-                  </div>
-                </a>
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        <Card>
+          <CardHeader className="hidden md:block">
+            <CardTitle>Connect with me</CardTitle>
+            <CardDescription>Find me on these platforms and get in touch</CardDescription>
+          </CardHeader>
+          <CardContent className="md:pt-6">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {socialLinks.map((link) => (
+                <Button
+                  key={link.name}
+                  variant="default"
+                  className={`h-auto justify-start gap-3 p-4 text-white ${link.color}`}
+                  asChild
+                >
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
+                    <link.icon className="h-5 w-5" />
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{link.name}</span>
+                      <span className="text-xs opacity-90">{link.username}</span>
+                    </div>
+                  </a>
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </SectionWrapper>
   )
 }

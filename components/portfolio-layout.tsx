@@ -109,41 +109,42 @@ export function PortfolioLayout({ children, activeSection, onSectionChange, head
   );
 
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-background">
+    <div className="flex flex-col md:flex-row h-[100svh] w-full max-h-screen bg-background overflow-hidden">
       {/* Desktop Sidebar - hidden on mobile */}
       <div className="hidden md:flex md:w-64 md:min-w-64 h-full border-r border-sidebar-border bg-sidebar text-sidebar-foreground flex-col">
         <SidebarContent />
       </div>
 
-      {/* Mobile Header with Menu Button */}
-      <div className="md:hidden fixed top-0 left-0 right-0 flex p-4 border-b border-sidebar-border w-full bg-sidebar text-sidebar-foreground z-10">
-        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-          <SheetTrigger asChild>
-            <Avatar className="h-10 w-10 cursor-pointer mr-3">
-              <AvatarImage src="/aditya.jpg" alt="Profile" />
-              <AvatarFallback>AP</AvatarFallback>
-            </Avatar>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 max-w-xs w-[80vw] bg-sidebar text-sidebar-foreground">
-            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-            <div className="flex flex-col h-full">
-              <SidebarContent isMobile={true} />
-            </div>
-          </SheetContent>
-        </Sheet>
-        
-        <div className="flex flex-col">
-          <h1 className="font-bold text-lg text-sidebar-accent-foreground">{currentSectionLabel}</h1>
-          <span className="text-xs text-muted-foreground">Aditya Pundir • Full-Stack Developer</span>
-        </div>
-      </div>
+      {/* Mobile layout using grid to ensure content takes exactly remaining height */}
+      <div className="grid md:block grid-rows-[auto_1fr] flex-1 h-full overflow-hidden">
+        {/* Mobile Header with Menu Button */}
+        <div className="md:hidden flex p-4 border-b border-sidebar-border w-full bg-sidebar text-sidebar-foreground z-10">
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetTrigger asChild>
+              <Avatar className="h-10 w-10 cursor-pointer mr-3">
+                <AvatarImage src="/aditya.jpg" alt="Profile" />
+                <AvatarFallback>AP</AvatarFallback>
+              </Avatar>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 max-w-xs w-[80vw] bg-sidebar text-sidebar-foreground">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <div className="flex flex-col h-full">
+                <SidebarContent isMobile={true} />
+              </div>
+            </SheetContent>
+          </Sheet>
+          
+          <div className="flex flex-col">
+            <h1 className="font-bold text-lg text-sidebar-accent-foreground">{currentSectionLabel}</h1>
+            <span className="text-xs text-muted-foreground">Aditya Pundir • Full-Stack Developer</span>
+          </div>
+        </div> 
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden overflow-y-auto pt-20 md:pt-0 h-full w-full">
-        <div className="h-full w-full p-4 pb-16 sm:p-6 sm:pb-16 md:p-8 md:pb-24">
+        {/* Main Content - will take exactly remaining space due to grid-rows-[auto_1fr] */}
+        <main className="overflow-hidden h-full">
           {children}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   )
 }

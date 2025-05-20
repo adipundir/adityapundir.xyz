@@ -1,6 +1,7 @@
 import { GraduationCap } from "lucide-react"
 import { SectionHeader } from "@/components/ui/section-header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 
 export function Education() {
   const education = [
@@ -21,22 +22,24 @@ export function Education() {
   ]
 
   return (
-    <div className="space-y-6 pb-8">
-      <SectionHeader icon={GraduationCap} title="Educational History" />
+    <SectionWrapper>
+      <div className="space-y-6">
+        <SectionHeader icon={GraduationCap} title="Educational History" />
 
-      <div className="space-y-4">
-        {education.map((edu, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <CardTitle>{edu.degree}</CardTitle>
-              <CardDescription>{`${edu.institution}, ${edu.location} • ${edu.period}`}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>{edu.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+        <div className="space-y-4">
+          {education.map((edu, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <CardTitle>{edu.degree}</CardTitle>
+                <CardDescription>{`${edu.institution}, ${edu.location} • ${edu.period}`}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p>{edu.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
+    </SectionWrapper>
   )
 }

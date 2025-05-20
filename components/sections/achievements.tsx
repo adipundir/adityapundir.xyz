@@ -1,6 +1,7 @@
 import { Trophy } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SectionHeader } from "@/components/ui/section-header"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 
@@ -33,10 +34,10 @@ export function Achievements() {
   ]
 
   return (
-    <div className="space-y-6 pb-8">
+    <SectionWrapper className="pt-4 md:pt-8 pb-8 px-4 md:px-6">
       <SectionHeader icon={Trophy} title="Achievements" />
-
-      <div className="grid gap-4 md:grid-cols-2">
+      
+      <div className="grid gap-4 md:grid-cols-2 pt-6 pb-2">
         {achievements.map((achievement, index) => (
           <Card key={index}>
             <CardHeader>
@@ -59,6 +60,6 @@ export function Achievements() {
           </Card>
         ))}
       </div>
-    </div>
+    </SectionWrapper>
   )
 }

@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { chatWithMe } from "@/app/actions/chat"
 import { sanitizeUserMessage } from "@/lib/chat-security"
 import { parseLinks } from "@/lib/parse-links"
+import { SectionWrapper } from "@/components/ui/section-wrapper"
 
 // Timestamp component that handles client-side formatting
 const MessageTimestamp = ({ timestamp }: { timestamp: Date }) => {
@@ -120,74 +121,76 @@ export function ChatInterface() {
   }
 
   return (
-    <div className="flex h-full flex-col ">
+    <SectionWrapper className="flex flex-col h-full p-4 sm:p-6 md:p-8">
       <div className="mb-4 hidden md:block">
         <h1 className="text-2xl font-bold">Chat with Me</h1>
         <p className="text-muted-foreground">Ask me anything about my experience, projects, or background</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto rounded-md border p-4">
-        <div className="space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={cn("flex items-start gap-3", message.role === "user" ? "justify-end" : "justify-start")}
-            >
-              {message.role === "assistant" && (
+      <div className="flex flex-col flex-1 border rounded-md overflow-hidden">
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={cn("flex items-start gap-3", message.role === "user" ? "justify-end" : "justify-start")}
+              >
+                {message.role === "assistant" && (
+                  <Avatar className="mt-0.5 h-8 w-8">
+                    <AvatarImage src="/aditya.jpg" alt="AI" />
+                    <AvatarFallback>AP</AvatarFallback>
+                  </Avatar>
+                )}
+
+                <div
+                  className={cn(
+                    "rounded-lg px-4 py-2 max-w-[80%]",
+                    message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted",
+                  )}
+                >
+                  <p>{message.role === "assistant" ? parseLinks(message.content) : message.content}</p>
+                  <div className="mt-1 text-xs opacity-70">
+                    <MessageTimestamp timestamp={message.timestamp} />
+                  </div>
+                </div>
+
+                {message.role === "user" && (
+                  <Avatar className="mt-0.5 h-8 w-8">
+                    <AvatarImage src="/user.png" alt="User" />
+                    <AvatarFallback>ME</AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
+            ))}
+
+            {isLoading && (
+              <div className="flex items-start gap-3">
                 <Avatar className="mt-0.5 h-8 w-8">
                   <AvatarImage src="/aditya.jpg" alt="AI" />
                   <AvatarFallback>AP</AvatarFallback>
                 </Avatar>
-              )}
-
-              <div
-                className={cn(
-                  "rounded-lg px-4 py-2 max-w-[80%]",
-                  message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted",
-                )}
-              >
-                <p>{message.role === "assistant" ? parseLinks(message.content) : message.content}</p>
-                <div className="mt-1 text-xs opacity-70">
-                  <MessageTimestamp timestamp={message.timestamp} />
+                <div className="rounded-lg bg-muted px-4 py-2">
+                  <div className="flex space-x-2">
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"></div>
+                    <div
+                      className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                    <div
+                      className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"
+                      style={{ animationDelay: "0.4s" }}
+                    ></div>
+                  </div>
                 </div>
               </div>
+            )}
 
-              {message.role === "user" && (
-                <Avatar className="mt-0.5 h-8 w-8">
-                  <AvatarImage src="/user.png" alt="User" />
-                  <AvatarFallback>ME</AvatarFallback>
-                </Avatar>
-              )}
-            </div>
-          ))}
-
-          {isLoading && (
-            <div className="flex items-start gap-3">
-              <Avatar className="mt-0.5 h-8 w-8">
-                <AvatarImage src="/aditya.jpg" alt="AI" />
-                <AvatarFallback>AP</AvatarFallback>
-              </Avatar>
-              <div className="rounded-lg bg-muted px-4 py-2">
-                <div className="flex space-x-2">
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"></div>
-                  <div
-                    className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                  <div
-                    className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"
-                    style={{ animationDelay: "0.4s" }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="mt-8 flex gap-2">
+      <form onSubmit={handleSendMessage} className="mt-4 flex gap-2">
         <Input
           ref={inputRef}
           value={input}
@@ -201,6 +204,6 @@ export function ChatInterface() {
           <span className="sr-only">Send message</span>
         </Button>
       </form>
-    </div>
+    </SectionWrapper>
   )
 }
