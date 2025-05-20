@@ -73,7 +73,7 @@ export function PortfolioLayout({ children, activeSection, onSectionChange, head
                         ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                         : "hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
                     )}
-                    onClick={() => onSectionChange(item.id)}
+                    onClick={() => handleItemClick(item.id)}
                   >
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
@@ -87,7 +87,7 @@ export function PortfolioLayout({ children, activeSection, onSectionChange, head
                       ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                       : "hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
                   )}
-                  onClick={() => onSectionChange(item.id)}
+                  onClick={() => handleItemClick(item.id)}
                 >
                   <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>
