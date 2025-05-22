@@ -4,6 +4,8 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { HumanMessage, SystemMessage, AIMessage } from "@langchain/core/messages";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { sanitizeUserMessage, analyzeConversationSafety } from "@/lib/chat-security";
+import { checkRateLimit } from "@/lib/rate-limiter";
+import { headers } from "next/headers";
 
 // Get API key from environment variable
 const apiKey = process.env.GOOGLE_API_KEY;
@@ -132,6 +134,24 @@ type Message = {
 
 export async function chatWithMe(messages: Message[]) {
   try {
+    // Get client IP address from request headers
+    const headersList = await headers();
+    // Get the client IP from x-forwarded-for header
+    const forwardedFor = headersList.get('x-forwarded-for') || '';
+    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown';
+    
+    // Check rate limit for this IP
+    const rateLimitResult = checkRateLimit(clientIp);
+    
+    // If rate limit exceeded, return a message about the limit
+    if (!rateLimitResult.allowed) {
+      const resetTime = rateLimitResult.resetAt?.toLocaleTimeString() || 'soon';
+      return {
+        content: `You've reached the maximum number of messages allowed. Please try again after ${resetTime}.`,
+        role: "assistant" as const,
+      };
+    }
+    
     // First, check if the conversation as a whole looks suspicious
     const isSafeConversation = analyzeConversationSafety(messages);
     
@@ -161,10 +181,16 @@ export async function chatWithMe(messages: Message[]) {
 
     // Call the chat model with the messages
     const response = await llm.invoke(fullMessages);
+    
+    // Add information about remaining messages if we're getting close to the limit
+    let content = response.content;
+    if (rateLimitResult.remaining <= 3) {
+      content += `\n\n(You have ${rateLimitResult.remaining} message${rateLimitResult.remaining === 1 ? '' : 's'} remaining in this session.)`;
+    }
 
     // Return the response text
     return {
-      content: response.content,
+      content,
       role: "assistant" as const,
     };
   } catch (error) {

@@ -52,6 +52,7 @@ export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [isRateLimited, setIsRateLimited] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -59,10 +60,10 @@ export function ChatInterface() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     // Re-focus the input box after messages are updated
-    if (!isLoading) {
+    if (!isLoading && !isRateLimited) {
       inputRef.current?.focus()
     }
-  }, [messages, isLoading])
+  }, [messages, isLoading, isRateLimited])
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -94,15 +95,25 @@ export function ChatInterface() {
       // Call the server action
       const response = await chatWithMe(messagesForAPI);
 
+      // Convert response content to string if needed
+      const responseContent = typeof response.content === 'string' 
+        ? response.content 
+        : JSON.stringify(response.content);
+
       // Add AI response to the chat
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: String(response.content),
+        content: responseContent,
         role: "assistant",
         timestamp: new Date(),
       }
 
       setMessages((prev) => [...prev, assistantMessage])
+      
+      // Check if the response indicates rate limiting
+      if (responseContent.includes("You've reached the maximum number of messages allowed")) {
+        setIsRateLimited(true)
+      }
     } catch (error) {
       console.error("Error sending message:", error);
       
@@ -196,10 +207,10 @@ export function ChatInterface() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
-          disabled={isLoading}
+          disabled={isLoading || isRateLimited}
           className="flex-1"
         />
-        <Button type="submit" disabled={isLoading || !input.trim()}>
+        <Button type="submit" disabled={isLoading || isRateLimited || !input.trim()}>
           <Send className="h-4 w-4" />
           <span className="sr-only">Send message</span>
         </Button>
